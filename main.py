@@ -1,6 +1,5 @@
-from gc import freeze
+import sys
 from stats import get_charcount_sorted, get_wordcount
-from stats import get_charcount
 
 def get_book_text(filepath):
     output = None
@@ -8,21 +7,27 @@ def get_book_text(filepath):
         output = f.read()
     return output
 
-
-def main():
+def print_report(filepath):
     print("============ BOOKBOT ============")
-    print("Analyzing book found at books/frankenstein.txt...")
+    print(f"Analyzing book found at {filepath}...")
     print("----------- Word Count ----------")
 
-    frankenstein = get_book_text("books/frankenstein.txt")
-    frankenstein_wordcount = get_wordcount(frankenstein)
-    print(f"Found {frankenstein_wordcount} total words")
+    body = get_book_text(filepath)
+    wordcount = get_wordcount(body)
+    print(f"Found {wordcount} total words")
 
     print("--------- Character Count -------")
-    charcount = get_charcount_sorted(frankenstein)
+    charcount = get_charcount_sorted(body)
     for char, count in charcount:
         if char.isalpha():
             print(f"{char}: {count}")
     print("============= END ===============")
+
+def main():
+    if len(sys.argv) != 2:
+        print("Usage: python3 main.py <path_to_book>")
+        sys.exit(1)
+    filepath = sys.argv[1]
+    print_report(filepath)
 
 main()
